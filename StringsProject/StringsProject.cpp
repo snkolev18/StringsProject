@@ -1,8 +1,16 @@
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <ctime>
+#include "functions.h"
+
 using namespace std;
 
 int main()
 {
-	cout << "This is a test";
+	bool menu = true;
+	do{
+		menu = Menu();
+	} while (true);
 }
 
