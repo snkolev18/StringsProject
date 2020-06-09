@@ -27,4 +27,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\GuessTheWord\GuessTheWord\hints.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\..\GuessTheWord\GuessTheWord\words.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
