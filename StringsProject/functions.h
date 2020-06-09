@@ -3,6 +3,10 @@
 #include <string>
 #include "structures.h"
 
-bool menu();
-int randomIndexWord();
-void guessTheWord();
+void welcome();
+int randomInt(int min, int max);
+int randomIndexWord(int numberOfQuestions);
+void deleteAQuestion(GAME& quiz, int index);
+void guessTheWord(int& score);
+void results(int score);
+bool menu(int& score);

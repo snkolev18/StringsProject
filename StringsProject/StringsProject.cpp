@@ -11,9 +11,10 @@ using namespace std;
 
 int main()
 {
+	int score = 0;
 	srand(time(NULL));
 	bool Menu = true;
 	do {
-		Menu = menu();
+		Menu = menu(score);
 	} while (Menu);
 }
