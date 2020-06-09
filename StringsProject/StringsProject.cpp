@@ -2,15 +2,19 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+#include <vector>
 #include "functions.h"
+#include "structures.h"
 
 using namespace std;
 
+
 int main()
 {
-	bool menu = true;
+	int index = randomIndexWord();
+	bool Menu = true;
 	do{
-		menu = Menu();
-	} while (true);
+		Menu = menu(index);
+	} while (Menu);
 }
 
