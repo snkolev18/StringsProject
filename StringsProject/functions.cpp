@@ -7,8 +7,6 @@
 
 using namespace std;
 
-vector<string> Words = { "woman", "jump", "copper", "calendar", "boyfriend", "king", "album", "monkey", "objective", "laptop" };
-
 void welcome() {
 	cout << R"(                                                
     | |   (_)   | |   | |            | |                 
@@ -19,83 +17,50 @@ void welcome() {
 }
 
 int randomIndexWord() {
-	srand(time(NULL));
-	int randomInd = rand();
-	randomInd = rand() % 10 + 1;
+	int randomInd = 0;
+	randomInd = rand() % 10;
 	return randomInd;
 }
 
-GAME getRandomWord(int& index) {
-	GAME game;
-	game.wordlist[index];
-	game.hints[index];
-	return game;
-}
-
-
-void guessTheWord(int& index) {
-	string word, hint, userInput;
+void guessTheWord() {
+	string userInput;
 	GAME gameParts;
-	int tries = 3;
+	int index;
 	bool checker = true;
-	word = gameParts.wordlist[index];
-	hint = gameParts.hints[index];
-	cout << "Hint: " << hint << "It contains " << word.length() << " letters";
+	index = randomIndexWord();
+	int tries = 3;
+	cout << "\nHint: " << gameParts.hints[index] << "\nIt contains " << gameParts.wordlist[index].length() << " letters";
 	cout << endl;
-	for (size_t i = 0; i < word.length(); i++){
+	for (size_t j = 0; j < gameParts.wordlist[index].length(); j++) {
 		cout << "_";
 	}
-	do{
+	cout << endl;
+	do {
 		cin >> userInput;
-		if (userInput.compare(word) == 0) {
+		if (userInput == gameParts.wordlist[index]) {
 			cout << "Congrats you guessed the word" << endl;
 			checker = true;
 		}
 		else {
-			cout << "Your input doesn't match the given word. Try again!!!" << endl;
 			tries -= 1;
+			if (tries == 1)
+			{
+				cout << "You have " << tries << " try left" << endl;
+			}
+			else
+			{
+				cout << "You have " << tries << " tries left" << endl;
+			}
+			cout << "Your input doesn't match the given word. Try again!!!" << endl;
 			checker = false;
 		}
 		if (tries == 0) {
-			cout << "You lost" << endl;
-			break;
+			cout << "You get 0 score from this word" << endl;
+			checker = true;
 		}
 	} while (checker == false);
 }
-
-
-/*string getRandomWord(int& index) {
-	return Words[index];
-}
-
-string getHint(int& index) {
-	ifstream hints;
-	string hint;
-	int hintInd = 1;
-	hints.open("hints.txt", ios::in);
-	getline(hints, hint);
-	if (hintInd == index) {
-		return hint;
-	}
-}*/
-
-/*string hint()
-{
-	string hints[10];
-	ifstream inFile;
-	inFile.open("hints.txt");
-	for (int i = 1; i <= 10; i++)
-	{
-		while (getline(inFile, hints[i]))
-		{
-			cout << hints[i];
-		}
-	}
-}
-*/
-
-
-bool menu(int& index) {
+bool menu() {
 	int option;
 	welcome();
 	cout << "------" << endl;
@@ -114,7 +79,7 @@ bool menu(int& index) {
 	switch (option)
 	{
 	case 1:
-		guessTheWord(index);
+		guessTheWord();
 		return true;
 		break;
 	case 2:

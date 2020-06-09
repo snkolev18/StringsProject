@@ -11,10 +11,9 @@ using namespace std;
 
 int main()
 {
-	int index = randomIndexWord();
+	srand(time(NULL));
 	bool Menu = true;
-	do{
-		Menu = menu(index);
+	do {
+		Menu = menu();
 	} while (Menu);
 }
-
