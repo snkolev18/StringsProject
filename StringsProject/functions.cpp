@@ -46,7 +46,8 @@ int randomInt(int min, int max) {
 }
 
 void welcome() {
-	cout << R"(  _     _              _                          
+	cout << R"(  
+     _     _     _     _              _                          
     | |   (_)   | |   | |            | |                 
     | |__  _  __| | __| | ___ _ __   | |_ ___  __ _ _ __ 
     | '_ \| |/ _` |/ _` |/ _ \ '_ \  | __/ _ \/ _` | '__|
@@ -69,24 +70,24 @@ void deleteAQuestion(GAME& quiz, int index) {
 
 void guessTheWord() {
 	string userInput;
-	GAME gameParts;
+	GAME quiz;
 	int countquiz = 0;
-	readQuestions(gameParts, countquiz);
+	readQuestions(quiz, countquiz);
 	int index;
 	int numberOfQuestions = countquiz - 1;
 	bool checker = true;
 	for (size_t i = 0; i < 10; i++) {
 		index = randomIndexWord(numberOfQuestions);
 		int tries = 3;
-		cout << "\nHint" << i + 1 << ": " << gameParts.hints[index] << "\nIt contains " << gameParts.wordlist[index].length() << " letters";
+		cout << "\nHint" << i + 1 << ": " << quiz.hints[index] << "\nIt contains " << quiz.wordlist[index].length() << " letters";
 		cout << endl;
-		for (size_t j = 0; j < gameParts.wordlist[index].length(); j++) {
-			cout << "_ ";
+		for (size_t j = 0; j < quiz.wordlist[index].length(); j++) {
+			cout << "_";
 		}
 		cout << endl;
 		do {
 			cin >> userInput;
-			if (userInput == gameParts.wordlist[index]) {
+			if (userInput == quiz.wordlist[index]) {
 				cout << "Congrats you guessed the word" << endl;
 				checker = true;
 			}
@@ -106,7 +107,7 @@ void guessTheWord() {
 				checker = true;
 			}
 		} while (checker == false);
-		deleteAQuestion(gameParts, index);
+		deleteAQuestion(quiz, index);
 		numberOfQuestions--;
 	}
 }
@@ -236,7 +237,7 @@ bool adminMenu(int count, USER* users, int user)
 	cout << "2.   Show a list of all the words and hints" << endl;
 	cout << "3.   See all users" << endl;
 	cout << "4.   Delete a user" << endl;
-	cout << "9.   " << endl;
+	cout << "9.   Exit" << endl;
 	cout << "------" << endl;
 	cout << "Choose your option: ";
 	while (!(cin >> option)) {
@@ -268,10 +269,10 @@ void login(int count, USER* users)
 	int wrongCounter = 0;
 	string username = "", password = "";
 
-	//cout << "Username: ";
-	//cin >> username;
-	//cout << "Password: ";
-	//cin >> password;
+	cout << "Username: ";
+	cin >> username;
+	cout << "Password: ";
+	cin >> password;
 
 	while (!grantAccess(username, password, count, users) && wrongCounter != 3) {
 		cout << "Your username/password is incorrect" << endl;

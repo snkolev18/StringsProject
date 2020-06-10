@@ -7,7 +7,7 @@ void welcome();
 int randomInt(int min, int max);
 int randomIndexWord(int numberOfQuestions);
 void deleteAQuestion(GAME& quiz, int index);
-void guessTheWord();
+void guessTheWord(GAME gameParts);
 void results();
 int findUserByUsername(string username, int count, USER* users);
 void registration(USER* users, int& count);
