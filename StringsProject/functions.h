@@ -17,3 +17,4 @@ bool grantAccess(string username, string password, int count, USER* users);
 bool registrationMenu(int& count, USER* users);
 bool userMenu(int count, USER* users, int user);
 void readAccounts(int& count, USER* users);
+void readQuestions(GAME& quiz, int& count);

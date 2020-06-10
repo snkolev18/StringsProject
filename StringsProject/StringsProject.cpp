@@ -13,7 +13,8 @@ using namespace std;
 int main()
 {
 	USER users[64];
-	int count = 0;
+	GAME quiz[64];
+	int count = 0, gameCount = 0;
 	readAccounts(count,users);
 	srand(time(NULL));
 	bool Menu = true;

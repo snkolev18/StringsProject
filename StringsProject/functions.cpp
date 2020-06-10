@@ -6,22 +6,47 @@
 #include "structures.h"
 
 using namespace std;
-void readAccounts(int& count,USER* users) {
+
+void readQuestions(GAME& quiz, int& count)
+{
+	ifstream inputFile("words.txt");
+	int cnt = 0;
+	if (inputFile.is_open()) {
+		string line;
+		while (getline(inputFile, line)) {
+			if (cnt % 2 == 0) {
+				quiz.wordlist[count] = line;
+			}
+			else {
+				quiz.hints[count] = line;
+				count++;
+			}
+			cnt++;
+			if (cnt > 1) {
+				cnt = 0;
+			}
+		}
+	}
+}
+
+
+void readAccounts(int& count, USER* users) {
 	ifstream inputFile("accounts.txt");
 	string line;
-	while (getline(inputFile, line))
-	{
+	while (getline(inputFile, line)) {
 		istringstream ss(line);
 		ss >> users[count].username >> users[count].password >> users[count].score;
+		cout << endl;
 		count++;
 	}
 }
+
 int randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
 
 void welcome() {
-	cout << R"(                                                
+	cout << R"(  _     _              _                          
     | |   (_)   | |   | |            | |                 
     | |__  _  __| | __| | ___ _ __   | |_ ___  __ _ _ __ 
     | '_ \| |/ _` |/ _` |/ _ \ '_ \  | __/ _ \/ _` | '__|
@@ -36,7 +61,7 @@ int randomIndexWord(int numberOfQuestions) {
 }
 
 void deleteAQuestion(GAME& quiz, int index) {
-	for (size_t i = index; i < 9; i++) {
+	for (size_t i = index; i < 10; i++) {
 		quiz.wordlist[i] = quiz.wordlist[i + 1];
 		quiz.hints[i] = quiz.hints[i + 1];
 	}
@@ -45,8 +70,10 @@ void deleteAQuestion(GAME& quiz, int index) {
 void guessTheWord() {
 	string userInput;
 	GAME gameParts;
+	int countquiz = 0;
+	readQuestions(gameParts, countquiz);
 	int index;
-	int numberOfQuestions = 14;
+	int numberOfQuestions = countquiz - 1;
 	bool checker = true;
 	for (size_t i = 0; i < 10; i++) {
 		index = randomIndexWord(numberOfQuestions);
@@ -54,7 +81,7 @@ void guessTheWord() {
 		cout << "\nHint" << i + 1 << ": " << gameParts.hints[index] << "\nIt contains " << gameParts.wordlist[index].length() << " letters";
 		cout << endl;
 		for (size_t j = 0; j < gameParts.wordlist[index].length(); j++) {
-			cout << "_" << " ";
+			cout << "_ ";
 		}
 		cout << endl;
 		do {
@@ -169,7 +196,8 @@ bool userMenu(int count, USER* users, int user) {
 		cout << "Try again: ";
 	}
 	switch (option) {
-	case 1: guessTheWord();
+	case 1:
+		guessTheWord();
 		break;
 	case 2: results();
 		break;
@@ -183,14 +211,22 @@ bool userMenu(int count, USER* users, int user) {
 	}
 	return true;
 }
-void addWordsAndHints()
-{
 
+void addWordsAndHints(GAME& quiz, int& gameCount)
+{
+	ofstream myfile;
+	myfile.open("words.txt", ios::app);
+	myfile << quiz.wordlist[gameCount] << " " << quiz.hints[gameCount];
+	myfile.close();
+	gameCount++;
 }
+
+
 void showWordsAndHints()
 {
 
 }
+
 bool adminMenu(int count, USER* users, int user)
 {
 	int option;
@@ -210,7 +246,7 @@ bool adminMenu(int count, USER* users, int user)
 		cout << "Try again: ";
 	}
 	switch (option) {
-	case 1: addWordsAndHints();
+	case 1: //addWordsAndHints(users, count);
 		break;
 	case 2: showWordsAndHints();
 		break;
@@ -226,15 +262,16 @@ bool adminMenu(int count, USER* users, int user)
 	}
 	return true;
 }
+
 void login(int count, USER* users)
 {
 	int wrongCounter = 0;
-	string username, password;
+	string username = "", password = "";
 
-	cout << "Username: ";
-	cin >> username;
-	cout << "Password: ";
-	cin >> password;
+	//cout << "Username: ";
+	//cin >> username;
+	//cout << "Password: ";
+	//cin >> password;
 
 	while (!grantAccess(username, password, count, users) && wrongCounter != 3) {
 		cout << "Your username/password is incorrect" << endl;
