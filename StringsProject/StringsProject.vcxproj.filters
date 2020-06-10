@@ -31,13 +31,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\GuessTheWord\GuessTheWord\hints.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\..\GuessTheWord\GuessTheWord\words.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="accounts.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="words.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

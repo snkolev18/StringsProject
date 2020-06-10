@@ -2,9 +2,9 @@
 
 using namespace std;
 
+
 struct GAME{
 	string wordlist[100];
-
 	string hints[100];
 };
 
