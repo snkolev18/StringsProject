@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <ctime>
 #include <vector>
@@ -12,7 +13,8 @@ using namespace std;
 int main()
 {
 	USER users[64];
-	int score = 0, count = 0;
+	int count = 0;
+	readAccounts(count,users);
 	srand(time(NULL));
 	bool Menu = true;
 	do {

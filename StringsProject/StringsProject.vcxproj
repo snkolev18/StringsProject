@@ -149,6 +149,7 @@
   <ItemGroup>
     <Text Include="..\..\GuessTheWord\GuessTheWord\hints.txt" />
     <Text Include="..\..\GuessTheWord\GuessTheWord\words.txt" />
+    <Text Include="accounts.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

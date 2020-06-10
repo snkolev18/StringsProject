@@ -1,11 +1,21 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <ctime>
 #include "structures.h"
 
 using namespace std;
-
+void readAccounts(int& count,USER* users) {
+	ifstream inputFile("accounts.txt");
+	string line;
+	while (getline(inputFile, line))
+	{
+		istringstream ss(line);
+		ss >> users[count].username >> users[count].password >> users[count].score;
+		count++;
+	}
+}
 int randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
@@ -21,7 +31,7 @@ void welcome() {
 
 int randomIndexWord(int numberOfQuestions) {
 	int randomInd;
-	randomInd = randomInt(0, numberOfQuestions + 5);
+	randomInd = randomInt(0, numberOfQuestions);
 	return randomInd;
 }
 
@@ -36,7 +46,7 @@ void guessTheWord() {
 	string userInput;
 	GAME gameParts;
 	int index;
-	int numberOfQuestions = 10;
+	int numberOfQuestions = 14;
 	bool checker = true;
 	for (size_t i = 0; i < 10; i++) {
 		index = randomIndexWord(numberOfQuestions);
@@ -135,10 +145,14 @@ void registration(USER* users, int& count)
 		cout << "Try with another password: ";
 		getline(cin, users[count].password);
 	}
+	ofstream myfile;
+	myfile.open("accounts.txt", ios::app);
+	myfile << users[count].username << " " << users[count].password << " 0" << endl;
+	myfile.close();
 	count++;
 }
 
-bool menu(int count, USER* users, int user) {
+bool userMenu(int count, USER* users, int user) {
 	int option;
 	welcome();
 	cout << "------" << endl;
@@ -155,29 +169,63 @@ bool menu(int count, USER* users, int user) {
 		cout << "Try again: ";
 	}
 	switch (option) {
-	case 1:
-		guessTheWord();
-		return true;
+	case 1: guessTheWord();
 		break;
-	case 2:
-		results();
-		return true;
+	case 2: results();
 		break;
 	case 3:
+		break;
+	case 9: cout << "Thank you for playing our game!!!" << endl;
+		return false;
 
-		return true;
+	default: cout << "That's not a valid option" << endl;
+		break;
+	}
+	return true;
+}
+void addWordsAndHints()
+{
+
+}
+void showWordsAndHints()
+{
+
+}
+bool adminMenu(int count, USER* users, int user)
+{
+	int option;
+	welcome();
+	cout << "------" << endl;
+	cout << "1.   Add new words and hints" << endl;
+	cout << "2.   Show a list of all the words and hints" << endl;
+	cout << "3.   See all users" << endl;
+	cout << "4.   Delete a user" << endl;
+	cout << "9.   " << endl;
+	cout << "------" << endl;
+	cout << "Choose your option: ";
+	while (!(cin >> option)) {
+		cout << "Incorrect input. ";
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
+		cout << "Try again: ";
+	}
+	switch (option) {
+	case 1: addWordsAndHints();
+		break;
+	case 2: showWordsAndHints();
+		break;
+	case 3:
 		break;
 	case 4:
-		cout << "Thank you for playing our game!!!" << endl;
-		return false;
 		break;
 
 	default:
 		cout << "That's not a valid option" << endl;
 		break;
+	case 9: return false;
 	}
+	return true;
 }
-
 void login(int count, USER* users)
 {
 	int wrongCounter = 0;
@@ -204,9 +252,18 @@ void login(int count, USER* users)
 		system("cls");
 		welcome();
 		bool showMenu;
-		do {
-			showMenu = menu(count, users, user);
-		} while (showMenu);
+		if (username == users[0].username && password == users[0].password)
+		{
+			do {
+				showMenu = adminMenu(count, users, user);
+			} while (showMenu);
+		}
+		else
+		{
+			do {
+				showMenu = userMenu(count, users, user);
+			} while (showMenu);
+		}
 	}
 }
 
@@ -221,8 +278,12 @@ bool registrationMenu(int& count, USER* users) //The menu that goes right after 
 	cout << "9.   Exit" << endl;
 	cout << "------" << endl;
 	cout << "Enter your choice: ";
-	cin >> choice;
-
+	while (!(cin >> choice)) {
+		cout << "Incorrect input. ";
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
+		cout << "Try again: ";
+	}
 	switch (choice)
 	{
 	case 1:

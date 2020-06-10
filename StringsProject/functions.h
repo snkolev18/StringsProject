@@ -15,4 +15,5 @@ void login(int count, USER* users);
 bool checkPassword(string password);
 bool grantAccess(string username, string password, int count, USER* users);
 bool registrationMenu(int& count, USER* users);
-bool menu(int count, USER* users, int user);
+bool userMenu(int count, USER* users, int user);
+void readAccounts(int& count, USER* users);
