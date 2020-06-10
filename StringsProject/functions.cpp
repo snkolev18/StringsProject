@@ -2,15 +2,14 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-#include <vector>
 #include "structures.h"
 
 using namespace std;
 
-int randomInt(int min, int max)
-{
+int randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
+
 void welcome() {
 	cout << R"(                                                
     | |   (_)   | |   | |            | |                 
@@ -19,33 +18,33 @@ void welcome() {
     | | | | | (_| | (_| |  __/ | | | | ||  __/ (_| | |   
     |_| |_|_|\__,_|\__,_|\___|_| |_|  \__\___|\__,_|_|   )" << endl;
 }
+
 int randomIndexWord(int numberOfQuestions) {
 	int randomInd;
-	randomInd = randomInt(0, numberOfQuestions);
+	randomInd = randomInt(0, numberOfQuestions + 5);
 	return randomInd;
 }
-void deleteAQuestion(GAME& quiz, int index)
-{
-	for (int i = index; i < 9; i++)
-	{
+
+void deleteAQuestion(GAME& quiz, int index) {
+	for (size_t i = index; i < 9; i++) {
 		quiz.wordlist[i] = quiz.wordlist[i + 1];
 		quiz.hints[i] = quiz.hints[i + 1];
 	}
 }
-void guessTheWord(int& score) {
+
+void guessTheWord() {
 	string userInput;
 	GAME gameParts;
 	int index;
 	int numberOfQuestions = 10;
 	bool checker = true;
-	for (int i = 0; i < 10; i++)
-	{
+	for (size_t i = 0; i < 10; i++) {
 		index = randomIndexWord(numberOfQuestions);
 		int tries = 3;
 		cout << "\nHint" << i + 1 << ": " << gameParts.hints[index] << "\nIt contains " << gameParts.wordlist[index].length() << " letters";
 		cout << endl;
 		for (size_t j = 0; j < gameParts.wordlist[index].length(); j++) {
-			cout << "_";
+			cout << "_" << " ";
 		}
 		cout << endl;
 		do {
@@ -53,16 +52,13 @@ void guessTheWord(int& score) {
 			if (userInput == gameParts.wordlist[index]) {
 				cout << "Congrats you guessed the word" << endl;
 				checker = true;
-				score++;
 			}
 			else {
 				tries -= 1;
-				if (tries == 1)
-				{
+				if (tries == 1) {
 					cout << "You have " << tries << " try left" << endl;
 				}
-				else
-				{
+				else {
 					cout << "You have " << tries << " tries left" << endl;
 				}
 				cout << "Your input doesn't match the given word. Try again!!!" << endl;
@@ -77,11 +73,72 @@ void guessTheWord(int& score) {
 		numberOfQuestions--;
 	}
 }
-void results(int score)
+
+void results()
 {
-	cout << "Your score is " << score << " points" << endl;
+	cout << "Your score is " << "10" << " points" << endl;
 }
-bool menu(int& score) {
+
+bool grantAccess(string username, string password, int count, USER* users)
+{
+	for (size_t i = 0; i < count; i++) {
+		if (users[i].username == username && users[i].password == password) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int findUserByUsername(string username, int count, USER* users)
+{
+	for (int i = 0; i < count; i++) {
+		if (users[i].username == username) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+bool checkPassword(string password)
+{
+	int countLowLetters = 0, countUpLetters = 0;
+	for (size_t i = 0; i < password.size(); i++) {
+		if (password[i] >= 'A' && password[i] <= 'Z') {
+			countUpLetters++;
+		}
+		else if (password[i] >= 'a' && password[i] <= 'z') {
+			countLowLetters++;
+		}
+	}
+	if (password.size() < 8 or countLowLetters == 0 or countUpLetters == 0) {
+		return false;
+	}
+	return true;
+
+}
+
+void registration(USER* users, int& count)
+{
+	cout << "Username: ";
+	cin.ignore();
+	getline(cin, users[count].username);
+
+	while (findUserByUsername(users[count].username, count, users) != -1) {
+		cout << "This username is already taken!" << endl;
+		cout << "Try with another username: ";
+		getline(cin, users[count].username);
+	}
+	cout << "Password: ";
+	getline(cin, users[count].password);
+	while (!checkPassword(users[count].password)) {
+		cout << "Your password must have at least 8 symbols, 1 small letter and 1 big letter" << endl;
+		cout << "Try with another password: ";
+		getline(cin, users[count].password);
+	}
+	count++;
+}
+
+bool menu(int count, USER* users, int user) {
 	int option;
 	welcome();
 	cout << "------" << endl;
@@ -97,14 +154,13 @@ bool menu(int& score) {
 		cin.ignore(INT_MAX, '\n');
 		cout << "Try again: ";
 	}
-	switch (option)
-	{
+	switch (option) {
 	case 1:
-		guessTheWord(score);
+		guessTheWord();
 		return true;
 		break;
 	case 2:
-		results(score);
+		results();
 		return true;
 		break;
 	case 3:
@@ -112,8 +168,74 @@ bool menu(int& score) {
 		return true;
 		break;
 	case 4:
-
+		cout << "Thank you for playing our game!!!" << endl;
 		return false;
 		break;
+
+	default:
+		cout << "That's not a valid option" << endl;
+		break;
 	}
+}
+
+void login(int count, USER* users)
+{
+	int wrongCounter = 0;
+	string username, password;
+
+	cout << "Username: ";
+	cin >> username;
+	cout << "Password: ";
+	cin >> password;
+
+	while (!grantAccess(username, password, count, users) && wrongCounter != 3) {
+		cout << "Your username/password is incorrect" << endl;
+		cout << "Please try again" << endl;
+		cout << "Username: ";
+		cin >> username;
+		cout << "Password: ";
+		cin >> password;
+		wrongCounter++;
+	}
+
+	int user = findUserByUsername(username, count, users);
+
+	if (grantAccess(username, password, count, users) && wrongCounter != 3) {
+		system("cls");
+		welcome();
+		bool showMenu;
+		do {
+			showMenu = menu(count, users, user);
+		} while (showMenu);
+	}
+}
+
+bool registrationMenu(int& count, USER* users) //The menu that goes right after the startup text
+{
+	welcome();
+	bool showRulesMenu = true;
+	int choice;
+	cout << "------" << endl;
+	cout << "1.   Register" << endl;
+	cout << "2.   Login" << endl;
+	cout << "9.   Exit" << endl;
+	cout << "------" << endl;
+	cout << "Enter your choice: ";
+	cin >> choice;
+
+	switch (choice)
+	{
+	case 1:
+		registration(users, count);
+		break;
+	case 2:
+		login(count, users);
+		break;
+	default:
+		cout << "That's not a valid option!!!" << endl;
+		break;
+	case 9:
+		return false;
+	}
+	return true;
 }

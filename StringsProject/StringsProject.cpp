@@ -11,10 +11,11 @@ using namespace std;
 
 int main()
 {
-	int score = 0;
+	USER users[64];
+	int score = 0, count = 0;
 	srand(time(NULL));
 	bool Menu = true;
 	do {
-		Menu = menu(score);
+		Menu = registrationMenu(count, users);
 	} while (Menu);
 }
