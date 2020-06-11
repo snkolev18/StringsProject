@@ -6,6 +6,9 @@
 #include "structures.h"
 
 using namespace std;
+															//////////////////////////////////////////
+											////////////////////////******DATA LAYER******////////////////////////
+															//////////////////////////////////////////
 
 void readQuestions(GAME& quiz, int& count)
 {
@@ -43,13 +46,22 @@ int randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
 
-void welcome() {
-	cout << R"(     _     _     _     _              _                          
-    | |   (_)   | |   | |            | |                 
-    | |__  _  __| | __| | ___ _ __   | |_ ___  __ _ _ __ 
-    | '_ \| |/ _` |/ _` |/ _ \ '_ \  | __/ _ \/ _` | '__|
-    | | | | | (_| | (_| |  __/ | | | | ||  __/ (_| | |   
-    |_| |_|_|\__,_|\__,_|\___|_| |_|  \__\___|\__,_|_|   )" << endl << endl;
+bool checkPassword(string password)
+{
+	int countLowLetters = 0, countUpLetters = 0;
+	for (size_t i = 0; i < password.size(); i++) {
+		if (password[i] >= 'A' && password[i] <= 'Z') {
+			countUpLetters++;
+		}
+		else if (password[i] >= 'a' && password[i] <= 'z') {
+			countLowLetters++;
+		}
+	}
+	if (password.size() < 8 or countLowLetters == 0 or countUpLetters == 0) {
+		return false;
+	}
+	return true;
+
 }
 
 int randomIndexWord(int numberOfQuestions) {
@@ -63,6 +75,44 @@ void deleteAQuestion(GAME& quiz, int index,int numberOfQuestions) {
 		quiz.wordlist[i] = quiz.wordlist[i + 1];
 		quiz.hints[i] = quiz.hints[i + 1];
 	}
+}
+
+
+bool grantAccess(string username, string password, int count, USER* users)
+{
+	for (size_t i = 0; i < count; i++) {
+		if (users[i].username == username && users[i].password == password) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int findUserByUsername(string username, int count, USER* users)
+{
+	for (int i = 0; i < count; i++) {
+		if (users[i].username.find(username) != string::npos) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+															//////////////////////////////////////////
+											////////////////////////******PRESENTATION LAYER******////////////////////////
+															//////////////////////////////////////////
+void welcome() {
+	cout << R"(     _     _     _     _              _                          
+    | |   (_)   | |   | |            | |                 
+    | |__  _  __| | __| | ___ _ __   | |_ ___  __ _ _ __ 
+    | '_ \| |/ _` |/ _` |/ _ \ '_ \  | __/ _ \/ _` | '__|
+    | | | | | (_| | (_| |  __/ | | | | ||  __/ (_| | |   
+    |_| |_|_|\__,_|\__,_|\___|_| |_|  \__\___|\__,_|_|   )" << endl << endl;
+}
+
+void results(USER* users,int user)
+{
+	cout << "Your score is " << users[user].score << " points" << endl;
 }
 
 void guessTheWord(USER* users,int user) {
@@ -111,49 +161,6 @@ void guessTheWord(USER* users,int user) {
 	}
 }
 
-void results(USER* users,int user)
-{
-	cout << "Your score is " << users[user].score << " points" << endl;
-}
-
-bool grantAccess(string username, string password, int count, USER* users)
-{
-	for (size_t i = 0; i < count; i++) {
-		if (users[i].username == username && users[i].password == password) {
-			return true;
-		}
-	}
-	return false;
-}
-
-int findUserByUsername(string username, int count, USER* users)
-{
-	for (int i = 0; i < count; i++) {
-		if (users[i].username.find(username) != string::npos) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-bool checkPassword(string password)
-{
-	int countLowLetters = 0, countUpLetters = 0;
-	for (size_t i = 0; i < password.size(); i++) {
-		if (password[i] >= 'A' && password[i] <= 'Z') {
-			countUpLetters++;
-		}
-		else if (password[i] >= 'a' && password[i] <= 'z') {
-			countLowLetters++;
-		}
-	}
-	if (password.size() < 8 or countLowLetters == 0 or countUpLetters == 0) {
-		return false;
-	}
-	return true;
-
-}
-
 void registration(USER* users, int& count)
 {
 	welcome();
@@ -180,7 +187,6 @@ void registration(USER* users, int& count)
 	count++;
 }
 
-//pr
 bool userMenu(int count, USER* users, int user) {
 	int option;
 	cout << "------" << endl;
@@ -211,7 +217,6 @@ bool userMenu(int count, USER* users, int user) {
 	return true;
 }
 
-//pr
 void addWordsAndHints()
 {
 	welcome();
@@ -228,7 +233,6 @@ void addWordsAndHints()
 	myfile.close();
 }
 
-//pr
 void showWordsAndHints()
 {
 	int count = 0;
@@ -267,32 +271,6 @@ void seeAllUsers(USER* users) {
 		count++;
 	}
 }
-
-
-
-/*
-void deleteAUser(int line){
-
-      std::string line;
-std::ifstream fin;
-
-fin.open(path);
-std::ofstream temp; // contents of path must be copied to a temp file then renamed back to the path file
-temp.open("temp.txt");
-
-while (getline(fin, line)) {
-    if (line != eraseLine) // write all lines to temp other than the line marked fro erasing
-        temp << line << std::endl;
-}
-
-
-temp.close();
-fin.close();
-
-const char * p = path.c_str(); // required conversion for remove and rename functions
-remove(p);
-rename("temp.txt", p);
-*/
 
 bool adminMenu(int count, USER* users, int user)
 {
