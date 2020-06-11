@@ -18,3 +18,5 @@ objective
 A thing aimed at or sought; a goal.
 laptop
 A computer that is portable and suitable for use while travelling.
+Banana
+A curved yellow fruit

@@ -34,7 +34,7 @@ void readAccounts(int& count, USER* users) {
 	string line;
 	while (getline(inputFile, line)) {
 		istringstream ss(line);
-		ss >> users[count].username >> users[count].password >> users[count].score;
+		ss >> users[count].username >> users[count].password;
 		count++;
 	}
 }
@@ -65,7 +65,8 @@ void deleteAQuestion(GAME& quiz, int index,int numberOfQuestions) {
 	}
 }
 
-void guessTheWord() {
+void guessTheWord(USER* users,int user) {
+	welcome();
 	string userInput;
 	GAME quiz;
 	int countquiz = 0;
@@ -87,6 +88,7 @@ void guessTheWord() {
 			if (userInput == quiz.wordlist[index]) {
 				cout << "Congrats you guessed the word" << endl;
 				checker = true;
+				users[user].score++;
 			}
 			else {
 				tries -= 1;
@@ -109,9 +111,9 @@ void guessTheWord() {
 	}
 }
 
-void results()
+void results(USER* users,int user)
 {
-	cout << "Your score is " << "10" << " points" << endl;
+	cout << "Your score is " << users[user].score << " points" << endl;
 }
 
 bool grantAccess(string username, string password, int count, USER* users)
@@ -127,7 +129,7 @@ bool grantAccess(string username, string password, int count, USER* users)
 int findUserByUsername(string username, int count, USER* users)
 {
 	for (int i = 0; i < count; i++) {
-		if (users[i].username == username) {
+		if (users[i].username.find(username) != string::npos) {
 			return i;
 		}
 	}
@@ -173,18 +175,17 @@ void registration(USER* users, int& count)
 	}
 	ofstream myfile;
 	myfile.open("accounts.txt", ios::app);
-	myfile << users[count].username << " " << users[count].password << " 0" << endl;
+	myfile << users[count].username << " " << users[count].password << endl;
 	myfile.close();
 	count++;
 }
 
+//pr
 bool userMenu(int count, USER* users, int user) {
 	int option;
 	cout << "------" << endl;
 	cout << "1.   Play guess the word" << endl;
 	cout << "2.   Show results" << endl;
-	cout << "3.   Continue playing" << endl;
-	cout << "4.   Stop playing" << endl;
 	cout << "9.   Sign out" << endl;
 	cout << "------" << endl;
 	cout << "Choose your option: ";
@@ -196,12 +197,10 @@ bool userMenu(int count, USER* users, int user) {
 	}
 	switch (option) {
 	case 1: system("cls");
-		guessTheWord();
+		guessTheWord(users,user);
 		cout << "Thank you for playing our game!!!" << endl;
 		break;
-	case 2: results();
-		break;
-	case 3:
+	case 2: results(users, user);
 		break;
 	case 9: return false;
 		break;
@@ -212,6 +211,7 @@ bool userMenu(int count, USER* users, int user) {
 	return true;
 }
 
+//pr
 void addWordsAndHints()
 {
 	welcome();
@@ -228,10 +228,71 @@ void addWordsAndHints()
 	myfile.close();
 }
 
+//pr
 void showWordsAndHints()
 {
-
+	int count = 0;
+	GAME results;
+	readQuestions(results, count);
+	ifstream inFile;
+	int cnt = 0;
+	string hint;
+	string word;
+    inFile.open("words.txt");
+    if (!inFile) {
+        cout << "Unable to open file";
+    }
+    
+    while (getline(inFile,word)) {
+		results.wordlist[cnt++] = word;
+		getline(inFile, hint);
+		cout << cnt << ": " << word << " - " << hint << endl;
+    }
 }
+
+void seeAllUsers(USER* users) {
+	int count = 0;
+	int cnt = 0;
+	ifstream file;
+	string username;
+	file.open("accounts.txt");
+	if (!file.is_open()) {
+		cout << "Unable to open file";
+	}
+	while (file >> username) {
+		if (count % 2 == 0) {
+			users[cnt++].username = username;
+			cout << cnt << ": " << username << endl;
+		}
+		count++;
+	}
+}
+
+
+
+/*
+void deleteAUser(int line){
+
+      std::string line;
+std::ifstream fin;
+
+fin.open(path);
+std::ofstream temp; // contents of path must be copied to a temp file then renamed back to the path file
+temp.open("temp.txt");
+
+while (getline(fin, line)) {
+    if (line != eraseLine) // write all lines to temp other than the line marked fro erasing
+        temp << line << std::endl;
+}
+
+
+temp.close();
+fin.close();
+
+const char * p = path.c_str(); // required conversion for remove and rename functions
+remove(p);
+rename("temp.txt", p);
+*/
 
 bool adminMenu(int count, USER* users, int user)
 {
@@ -241,7 +302,6 @@ bool adminMenu(int count, USER* users, int user)
 	cout << "1.   Add new words and hints" << endl;
 	cout << "2.   Show a list of all the words and hints" << endl;
 	cout << "3.   See all users" << endl;
-	cout << "4.   Delete a user" << endl;
 	cout << "9.   Sign out" << endl;
 	cout << "------" << endl;
 	cout << "Choose your option: ";
@@ -257,11 +317,8 @@ bool adminMenu(int count, USER* users, int user)
 		break;
 	case 2: showWordsAndHints();
 		break;
-	case 3:
+	case 3: seeAllUsers(users);
 		break;
-	case 4:
-		break;
-
 	default:
 		cout << "That's not a valid option" << endl;
 		break;
