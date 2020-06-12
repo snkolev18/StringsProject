@@ -3,38 +3,49 @@
 #include <string>
 #include "structures.h"
 
-															//////////////////////////////////////////
-											////////////////////////******DATA LAYER******////////////////////////
-															//////////////////////////////////////////
+//==================================================================\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+\\==================================================================//
 
 void readQuestions(GAME& quiz, int& count);
 
 void readAccounts(int& count, USER* users);
 
-int randomInt(int min, int max);
+void asteriskInput(string& password);
 
-bool checkPassword(string password);
+int randomInt(int min, int max);
 
 int randomIndexWord(int numberOfQuestions);
 
-void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions);
+bool checkPassword(string password);
 
 bool grantAccess(string username, string password, int count, USER* users);
 
 int findUserByUsername(string username, int count, USER* users);
 
-															//////////////////////////////////////////
-											////////////////////////******PRESENTATION LAYER******////////////////////////
-															//////////////////////////////////////////
+void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions);
+
+//==========================================================================\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+\\==========================================================================//
+
 void welcome();
 
-void results();
+void lineDesignUp();
 
-void guessTheWord(USER* users, int user);
+void lineDesignDown();
 
 void registration(USER* users, int& count);
 
-bool userMenu(int count, USER* users, int user);
+void results(USER* users, int user);
+
+void guessTheWord(USER* users, int user);
+
+bool userMenu(int count, USER* users, int indexOfTheUser);
 
 void addWordsAndHints();
 
@@ -46,4 +57,4 @@ bool adminMenu(int count, USER* users, int user);
 
 void login(int count, USER* users);
 
-bool registrationMenu(int& count, USER* users); //The menu that goes right after the startup text
+bool registrationMenu(int& count, USER* users);

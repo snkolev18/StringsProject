@@ -8,30 +8,13 @@
 
 using namespace std;
 
-//////////////////////////////////////////
-////////////////////////******DATA LAYER******////////////////////////
-				//////////////////////////////////////////
+//==================================================================\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+\\==================================================================//
 
-void asteriskInput(string& password)
-{
-	char ch;
-	ch = _getch();
-	while (ch != 13) {
-		if (ch == 8) {
-			if (password.length() > 0) {
-				cout << "\b \b";
-				password.erase(password.length() - 1);
-			}
-		}
-		else {
-			cout << "*";
-			password += ch;
-		}
-		ch = _getch();
-	}
-}
-
-void readQuestions(GAME& quiz, int& count)
+void readQuestions(GAME& quiz, int& count) //Stores the words with their definitions to variables
 {
 	ifstream inputFile("words.txt");
 	int cnt = 0;
@@ -63,12 +46,36 @@ void readAccounts(int& count, USER* users) {
 	}
 }
 
+void asteriskInput(string& password)
+{
+	char asteriskPassword;
+	asteriskPassword = _getch();
+	while (asteriskPassword != 13) {
+		if (asteriskPassword == 8) {
+			if (password.length() > 0) {
+				cout << "\b \b";
+				password.erase(password.length() - 1);
+			}
+		}
+		else {
+			cout << "*";
+			password += asteriskPassword;
+		}
+		asteriskPassword = _getch();
+	}
+}
+
 int randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
 
-bool checkPassword(string password)
-{
+int randomIndexWord(int numberOfQuestions) {
+	int randomInd;
+	randomInd = randomInt(0, numberOfQuestions);
+	return randomInd;
+}
+
+bool checkPassword(string password) {
 	int countLowLetters = 0, countUpLetters = 0;
 	for (size_t i = 0; i < password.size(); i++) {
 		if (password[i] >= 'A' && password[i] <= 'Z') {
@@ -78,29 +85,14 @@ bool checkPassword(string password)
 			countLowLetters++;
 		}
 	}
-	if (password.size() < 8 or countLowLetters == 0 or countUpLetters == 0) {
+	if (password.size() < 9 or countLowLetters == 0 or countUpLetters == 0) {
 		return false;
 	}
 	return true;
 
 }
 
-int randomIndexWord(int numberOfQuestions) {
-	int randomInd;
-	randomInd = randomInt(0, numberOfQuestions);
-	return randomInd;
-}
-
-void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions) {
-	for (size_t i = index; i < numberOfQuestions; i++) {
-		quiz.wordlist[i] = quiz.wordlist[i + 1];
-		quiz.hints[i] = quiz.hints[i + 1];
-	}
-}
-
-
-bool grantAccess(string username, string password, int count, USER* users)
-{
+bool grantAccess(string username, string password, int count, USER* users) {
 	for (size_t i = 0; i < count; i++) {
 		if (users[i].username == username && users[i].password == password) {
 			return true;
@@ -119,9 +111,18 @@ int findUserByUsername(string username, int count, USER* users)
 	return -1;
 }
 
-//////////////////////////////////////////
-////////////////////////******PRESENTATION LAYER******////////////////////////
-				//////////////////////////////////////////
+void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions) {
+	for (size_t i = index; i < numberOfQuestions; i++) {
+		quiz.wordlist[i] = quiz.wordlist[i + 1];
+		quiz.hints[i] = quiz.hints[i + 1];
+	}
+}
+
+//==========================================================================\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
+\\==========================================================================//
 
 void welcome() {
 	cout << R"(     _     _     _     _              _                          
@@ -132,9 +133,54 @@ void welcome() {
     |_| |_|_|\__,_|\__,_|\___|_| |_|  \__\___|\__,_|_|   )" << endl << endl;
 }
 
+void lineDesignUp()
+{
+	cout << "/==============\\" << endl;
+}
+
+void lineDesignDown()
+{
+	cout << "\\==============/" << endl;
+}
+
+void registration(USER* users, int& count)
+{
+	welcome();
+	cout << "Username: ";
+	cin.ignore();
+	getline(cin, users[count].username);
+
+	while (findUserByUsername(users[count].username, count, users) != -1) {
+		cout << "This username is already taken!" << endl;
+		cout << "Try with another username: ";
+		getline(cin, users[count].username);
+	}
+	cout << "Password: ";
+	asteriskInput(users[count].password);
+	while (!checkPassword(users[count].password)) {
+		cout << "\nYour password must have at least 8 symbols, 1 small letter and 1 big letter" << endl;
+		cout << "Try with another password: ";
+		asteriskInput(users[count].password);
+	}
+	ofstream myfile;
+	myfile.open("accounts.txt", ios::app);
+	myfile << users[count].username << " " << users[count].password << endl;
+	myfile.close();
+	count++;
+}
+
 void results(USER* users, int user)
 {
-	cout << "Your score is " << users[user].score << " points" << endl;
+	system("cls");
+	welcome();
+	if (users[user].score == 1)
+	{
+		cout << "\nYour score is " << users[user].score << " point\n" << endl;
+	}
+	else
+	{
+		cout << "\nYour score is " << users[user].score << " points\n" << endl;
+	}
 }
 
 void guessTheWord(USER* users, int user) {
@@ -157,65 +203,51 @@ void guessTheWord(USER* users, int user) {
 		cout << endl;
 		do {
 			cin >> userInput;
+			for (size_t i = 0; i < userInput.length(); i++)
+			{
+				userInput[i] = tolower(userInput[i]);
+			}
 			if (userInput == quiz.wordlist[index]) {
-				cout << "Congrats you guessed the word" << endl;
+				cout << "\nCongrats you guessed the word!" << endl;
+				cout << "You get 1 point for guessing it!" << endl;
 				checker = true;
 				users[user].score++;
 			}
-			else {
+			else if (tries > 0)
+			{
 				tries -= 1;
 				if (tries == 1) {
-					cout << "You have " << tries << " try left" << endl;
+					cout << "You have " << tries << " try left!" << endl;
 				}
 				else {
-					cout << "You have " << tries << " tries left" << endl;
+					cout << "You have " << tries << " tries left!" << endl;
 				}
-				cout << "Your input doesn't match the given word. Try again!!!" << endl;
+				cout << "Your input doesn't match the given word. Try again!" << endl;
 				checker = false;
+				for (size_t j = 0; j < quiz.wordlist[index].length(); j++) {
+					cout << "_";
+				}
+				cout << endl;
 			}
 			if (tries == 0) {
-				cout << "You get 0 score from this word" << endl;
+				cout << "You have " << tries << " tries left!" << endl;
+				cout << "You get 0 points from this question!" << endl;
 				checker = true;
 			}
 		} while (checker == false);
+		cout << "\nNow your score is " << users[user].score << " points" << endl;
 		deleteAQuestion(quiz, index, countquiz);
 		numberOfQuestions--;
 	}
 }
 
-void registration(USER* users, int& count)
-{
-	welcome();
-	cout << "Username: ";
-	cin.ignore();
-	getline(cin, users[count].username);
-
-	while (findUserByUsername(users[count].username, count, users) != -1) {
-		cout << "This username is already taken!" << endl;
-		cout << "Try with another username: ";
-		getline(cin, users[count].username);
-	}
-	cout << "Password: ";
-	asteriskInput(users[count].password);
-	while (!checkPassword(users[count].password)) {
-		cout << "Your password must have at least 8 symbols, 1 small letter and 1 big letter" << endl;
-		cout << "Try with another password: ";
-		asteriskInput(users[count].password);
-	}
-	ofstream myfile;
-	myfile.open("accounts.txt", ios::app);
-	myfile << users[count].username << " " << users[count].password << endl;
-	myfile.close();
-	count++;
-}
-
-bool userMenu(int count, USER* users, int user) {
+bool userMenu(int count, USER* users, int indexOfTheUser) {
 	int option;
-	cout << "------" << endl;
-	cout << "1.   Play guess the word" << endl;
-	cout << "2.   Show results" << endl;
-	cout << "9.   Sign out" << endl;
-	cout << "------" << endl;
+	lineDesignUp();
+	cout << "1. Play guess the word" << endl;
+	cout << "2. Show results" << endl;
+	cout << "9. Sign out" << endl;
+	lineDesignDown();
 	cout << "Choose your option: ";
 	while (!(cin >> option)) {
 		cout << "Incorrect input. ";
@@ -225,10 +257,10 @@ bool userMenu(int count, USER* users, int user) {
 	}
 	switch (option) {
 	case 1: system("cls");
-		guessTheWord(users, user);
-		cout << "Thank you for playing our game!!!" << endl;
+		guessTheWord(users, indexOfTheUser);
+		cout << "Thank you for playing our game!!!" << endl << endl;
 		break;
-	case 2: results(users, user);
+	case 2: results(users, indexOfTheUser);
 		break;
 	case 9: return false;
 		break;
@@ -247,6 +279,10 @@ void addWordsAndHints()
 	myfile.open("words.txt", ios::app);
 	cout << "Word: ";
 	cin >> word;
+	for (size_t i = 0; i < word.length(); i++)
+	{
+		word[i] = tolower(word[i]);
+	}
 	cout << "Hint: ";
 	cin.ignore();
 	getline(cin, hint);
@@ -257,6 +293,8 @@ void addWordsAndHints()
 
 void showWordsAndHints()
 {
+	system("cls");
+	welcome();
 	int count = 0;
 	GAME results;
 	readQuestions(results, count);
@@ -268,15 +306,17 @@ void showWordsAndHints()
 	if (!inFile) {
 		cout << "Unable to open file";
 	}
-
 	while (getline(inFile, word)) {
 		results.wordlist[cnt++] = word;
 		getline(inFile, hint);
 		cout << cnt << ": " << word << " - " << hint << endl;
 	}
+	cout << endl;
 }
 
 void seeAllUsers(USER* users) {
+	system("cls");
+	welcome();
 	int count = 0;
 	int cnt = 0;
 	ifstream file;
@@ -288,21 +328,22 @@ void seeAllUsers(USER* users) {
 	while (file >> username) {
 		if (count % 2 == 0) {
 			users[cnt++].username = username;
-			cout << cnt << ": " << username << endl;
+			cout << cnt << ". Username: " << username << endl;
 		}
 		count++;
 	}
+	cout << endl;
 }
 
 bool adminMenu(int count, USER* users, int user)
 {
 	int option;
-	cout << "------" << endl;
-	cout << "1.   Add new words and hints" << endl;
-	cout << "2.   Show a list of all the words and hints" << endl;
-	cout << "3.   See all users" << endl;
-	cout << "9.   Sign out" << endl;
-	cout << "------" << endl;
+	lineDesignUp();
+	cout << "1. Add new words and hints" << endl;
+	cout << "2. Show a list of all the words and hints" << endl;
+	cout << "3. See all users" << endl;
+	cout << "9. Sign out" << endl;
+	lineDesignDown();
 	cout << "Choose your option: ";
 	while (!(cin >> option)) {
 		cout << "Incorrect input. ";
@@ -337,8 +378,8 @@ void login(int count, USER* users)
 	asteriskInput(password);
 
 	while (!grantAccess(username, password, count, users) && wrongCounter != 3) {
-		cout << "\nYour username/password is incorrect" << endl;
-		cout << "Please try again" << endl;
+		cout << "\nYour username/password is incorrect!" << endl;
+		cout << "Please try again!" << endl;
 		username = "";
 		password = "";
 		cout << "Username: ";
@@ -374,11 +415,11 @@ bool registrationMenu(int& count, USER* users) //The menu that goes right after 
 	welcome();
 	bool showRulesMenu = true;
 	int choice;
-	cout << "------" << endl;
-	cout << "1.   Register" << endl;
-	cout << "2.   Login" << endl;
-	cout << "9.   Exit" << endl;
-	cout << "------" << endl;
+	lineDesignUp();
+	cout << "1. Register" << endl;
+	cout << "2. Login" << endl;
+	cout << "9. Exit" << endl;
+	lineDesignDown();
 	cout << "Enter your choice: ";
 	while (!(cin >> choice)) {
 		cout << "Incorrect input. ";
