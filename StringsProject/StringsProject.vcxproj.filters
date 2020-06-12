@@ -34,7 +34,7 @@
     <Text Include="accounts.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="words.txt">
+    <Text Include="questions.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

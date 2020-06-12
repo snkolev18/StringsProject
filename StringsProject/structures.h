@@ -4,8 +4,8 @@ using namespace std;
 
 
 struct GAME{
-	string wordlist[100];
-	string hints[100];
+	string word[100];
+	string definitions[100];
 };
 
 

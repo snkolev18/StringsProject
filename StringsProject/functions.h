@@ -3,29 +3,34 @@
 #include <string>
 #include "structures.h"
 
+
 //==================================================================\\
 ////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////////////////******DATA LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
 \\==================================================================//
 
-void readQuestions(GAME& quiz, int& count);
 
-void readAccounts(int& count, USER* users);
+void readQuestions(GAME& quiz, int& countQuestions); //Stores the words with their definitions in a structure
 
-void asteriskInput(string& password);
+void readAccounts(int& countUsers, USER* users); //Stores the accounts in a structure
 
-int randomInt(int min, int max);
+void asteriskInput(string& password); //Displays the user passowrd with *
 
-int randomIndexWord(int numberOfQuestions);
+int randomInt(int min, int max); //Returns a random number in the closed interval of the given numbers
 
-bool checkPassword(string password);
+int randomIndexWord(int lastIndexOfQuestions); //Returns a random index in the closed interval of 0 and the number of questions which are not used
 
-bool grantAccess(string username, string password, int count, USER* users);
+bool checkUsername(string username); //Checks if the username contains enough symbols
 
-int findUserByUsername(string username, int count, USER* users);
+bool checkPassword(string password); //Checks if the password passes all the requirements
 
-void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions);
+bool grantAccess(string username, string password, int count, USER* users); //Checks for user with the given username and password
+
+int findUserByUsername(string username, int count, USER* users); //Returns the index of a user with the given username
+
+void deleteAQuestion(GAME& quiz, int index, int countQuestions); //Deletes the question with the given index
+
 
 //==========================================================================\\
 ////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
@@ -33,28 +38,29 @@ void deleteAQuestion(GAME& quiz, int index, int numberOfQuestions);
 ////////////////////////******PRESENTATION LAYER******\\\\\\\\\\\\\\\\\\\\\\\\
 \\==========================================================================//
 
-void welcome();
 
-void lineDesignUp();
+void welcome(); //Header
 
-void lineDesignDown();
+void lineDesignUp(); //Line for the design 
 
-void registration(USER* users, int& count);
+void lineDesignDown(); //Line for the design
 
-void results(USER* users, int user);
+void registration(USER* users, int& countUsers); //Registers a user
 
-void guessTheWord(USER* users, int user);
+void showScore(USER* users, int loggedUser); //Shows the score of the user
 
-bool userMenu(int count, USER* users, int indexOfTheUser);
+void guessTheWord(USER* users, int loggedUser); //Runs a game called "Guess the word"
 
-void addWordsAndHints();
+bool userMenu(int count, USER* users, int loggedUser); //Gives the user a menu
 
-void showWordsAndHints();
+void addWordsAndDefinitions(); //Adds a new word with its definition
 
-void seeAllUsers(USER* users);
+void showWordsAndDefinitions(); //Prints out all the words with their definitions which are in the text file
 
-bool adminMenu(int count, USER* users, int user);
+void showAllUsers(); //Prints out all the usernames which are in the text file
 
-void login(int count, USER* users);
+bool adminMenu(USER* users); //Gives the admin a menu
 
-bool registrationMenu(int& count, USER* users);
+void login(int countUsers, USER* users); //Shows a menu depending on the credentials
+
+bool menu(int& countUsers, USER* users); //The menu that asks you if you want to register, login or exit

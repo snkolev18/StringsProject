@@ -14,14 +14,14 @@ int main()
 {
 	srand(time(NULL));
 
-	int count = 0;
+	int countUsers = 0;
 	USER users[64];
 	bool Menu = true;
 
-	readAccounts(count, users);
+	readAccounts(countUsers, users);
 
 	do {
-		Menu = registrationMenu(count, users);
+		Menu = menu(countUsers, users);
 	} while (Menu);
 
 }
